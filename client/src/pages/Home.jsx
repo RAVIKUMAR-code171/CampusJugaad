@@ -33,6 +33,7 @@ const [minPrice, setMinPrice] = useState('')
 const [maxPrice, setMaxPrice] = useState('')
 const [collegeFilter, setCollegeFilter] = useState('All')
   const [menuOpen, setMenuOpen] = useState(false)
+const [loading, setLoading] = useState(true)
 const [notifications, setNotifications] = useState([])
 const [unreadCount, setUnreadCount] = useState(0)
 const [showNotifications, setShowNotifications] = useState(false)
@@ -58,12 +59,17 @@ useEffect(() => {
     } catch (err) { console.log(err) }
   }
 
-  const fetchListings = async () => {
-    try {
-      const res = await axios.get('https://campusjugaad-server.onrender.com/api/listings')
-      setListings(res.data)
-    } catch (err) { console.log(err) }
+ const fetchListings = async () => {
+  try {
+    setLoading(true)
+    const res = await axios.get('https://campusjugaad-server.onrender.com/api/listings')
+    setListings(res.data)
+  } catch (err) {
+    console.log(err)
+  } finally {
+    setLoading(false)
   }
+}
 
   const logout = () => {
     localStorage.removeItem('token')

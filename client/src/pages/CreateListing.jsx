@@ -4,26 +4,6 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
 export default function CreateListing() {
-  const [aiLoading, setAiLoading] = useState(false)
-
-  const generateWithAI = async () => {
-    if (!form.title) return toast.error('Enter item name first!')
-    setAiLoading(true)
-    try {
-      const response = await fetch('https://campusjugaad-server.onrender.com/api/ai/generate-listing', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: form.title })
-      })
-      const parsed = await response.json()
-      setForm(f => ({ ...f, title: parsed.title, description: parsed.description }))
-      toast.success('AI generated your listing! ✨')
-    } catch (err) {
-      toast.error('AI generation failed. Try again!')
-    }
-    setAiLoading(false)
-  }
-
   const [form, setForm] = useState({ title: '', description: '', price: '', type: 'sell', category: 'Books', condition: 'Good', college: '' })
   const [image, setImage] = useState(null)
   const [preview, setPreview] = useState(null)
@@ -35,7 +15,7 @@ export default function CreateListing() {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
- const handleImage = (e) => {
+  const handleImage = (e) => {
     const file = e.target.files[0]
     if (!file) return
     setImage(file)
@@ -48,7 +28,7 @@ export default function CreateListing() {
       const token = localStorage.getItem('token')
       let imageUrl = ''
 
-     if (image) {
+      if (image) {
         const formData = new FormData()
         formData.append('image', image)
         console.log('Uploading image...', image)
@@ -114,10 +94,6 @@ export default function CreateListing() {
         ))}
 
         <div style={{ marginBottom: 16 }}>
-          <button type="button" onClick={generateWithAI}
-            style={{ width: '100%', background: aiLoading ? '#ccc' : 'linear-gradient(135deg, #7B5A2D, #9C6B3C)', color: '#fff', border: 'none', borderRadius: 12, padding: '12px', fontSize: 14, fontFamily: 'Sora, sans-serif', fontWeight: 600, cursor: 'pointer', marginBottom: 16 }}>
-            {aiLoading ? '✨ Generating...' : '✨ Generate with AI'}
-          </button>
           <label style={{ fontSize: 13, fontWeight: 600, color: '#8A6A50', display: 'block', marginBottom: 6 }}>Description</label>
           <textarea name="description" placeholder="Describe your item..." value={form.description} onChange={handleChange} rows={3}
             style={{ width: '100%', border: '1.5px solid #ffcf90', borderRadius: 12, padding: '12px 16px', fontFamily: 'Sora, sans-serif', fontSize: 14, outline: 'none', resize: 'vertical', boxSizing: 'border-box' }} />
